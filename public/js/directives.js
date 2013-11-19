@@ -47,11 +47,11 @@ youtubeApp.directive('videos', function () {
 		}
 	}
 });
-youtubeApp.directive('tokenStale', ['UpdateToken', function (UpdateToken) {
+youtubeApp.directive('error', ['UpdateToken', function (UpdateToken) {
 	return {
 		restrict: 'A',
 		link: function($scope, element) {
-			$scope.$watch('tokenError', function () {
+			$scope.$watch('error', function () {
 				var countdown = 3;
 				var interval = setInterval(function () {
 					if(countdown === 0) {
@@ -64,6 +64,10 @@ youtubeApp.directive('tokenStale', ['UpdateToken', function (UpdateToken) {
 								localStorage.setItem('oauth_token', oauthData.access_token);
 								UpdateToken.update(oauthData.access_token).success(function (data) {
 									console.log(data);	
+									$scope.error = 'Refreshing...';
+									setTimeout(function () {
+										location.reload();
+									},2000);
 								}).error(function (error) {
 									console.log(error);
 								});

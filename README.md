@@ -17,6 +17,7 @@ Installation
 -------------
 ```bash
 npm install && mv configuration/config.template configuration/config.ini && vim config.ini
+node server
 ```
 
 License

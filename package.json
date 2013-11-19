@@ -1,0 +1,24 @@
+{
+	"name": "youtubeClient-angular",
+	"version": "0.0.1",
+	"description": "Youtube Client using AngularJS",
+	"author": {
+		"name": "Adam Schodde",
+        "email": "sparky1010+github@gmail.com"
+	},
+	"licenses": [{
+		"type": "GPLv3",
+		"url": "http://www.gnu.org/licenses"
+	}],
+	"repository" :{ 
+		"type" : "git", 
+		"url" : "http://github.com/brutalhonesty/youtubeClient-angular.git"
+	},
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "express": "3.x",
+    "ini": "1.1.0",
+    "underscore": "~1.5.2",
+    "youtube-api": "~0.1.1"
+  }
+}

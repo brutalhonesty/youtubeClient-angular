@@ -1,0 +1,15 @@
+moviepath = 
+musicpath = 
+tvpath = 
+language = en
+onscreenkeyboard = 
+location = Tempe
+screensaver = dim
+theme = wigo.css
+spotifyUser = 
+spotifyPass = 
+port = 3000
+pluginPrefix = 
+data_storage_dir = 
+oauth = 
+oauthKey = 

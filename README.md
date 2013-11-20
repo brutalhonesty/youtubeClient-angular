@@ -16,6 +16,8 @@ Youtube Client using AngularJS for [MediaCenterJS](https://github.com/jansmolder
 Installation
 -------------
 * Head over to [Oauth.IO](http://oauth.io) and create an account, adding youtube to your API's.
+
+
 ```bash
 npm install && mv configuration/config.template configuration/config.ini && vim config.ini
 node server

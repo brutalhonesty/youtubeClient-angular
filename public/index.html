@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="css/core/style.css">
+	<link rel="stylesheet" href="css/lib/video-js.min.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/cards.css">
 	<link rel="stylesheet" href="css/animate-custom.css">
@@ -11,42 +12,20 @@
 	<script type="text/javascript" src="js/lib/angular-route.min.js"></script>
 	<script type="text/javascript" src="js/lib/oauth.min.js"></script>
 	<script type="text/javascript" src="js/lib/iso8601.min.js"></script>
+	<script type="text/javascript" src="js/lib/video.js"></script>
+	<script type="text/javascript" src="js/lib/vjs.youtube.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
 	<script type="text/javascript" src="js/controllers.js"></script>
 	<script type="text/javascript" src="js/directives.js"></script>
 	<script type="text/javascript" src="js/services.js"></script>
 	<title>Youtube</title>
 </head>
-<body ng-controller="MainCtrl" ng-controller="SearchCtrl">
+<body>
 	<div id="backdrop">
 		<img src="" class="backdropimg">
 	</div>
 	<div id="wrapper">
-		<a href="" class="backlink">
-			<img src="css/icons/back.png">
-		</a>
-		<div id="errorContainer" ng-if="error">
-			<h1 id="error" error>
-			{{error}}
-			<span></span>
-		</h1>
-		</div>
-		<div id="videoContainer" ng-if="!error">
-			<h1>What to Watch</h1>
-			<label for="search"></label>
-			<input type="text" id="search" placeholder="Search.." autocomplete="off" autofocus search>
-			<div id="main">
-				<section class="card initialData" data-id="{{video.videoID}}" ng-repeat="video in videos" videos>
-					<div class="map" style="background-image: url({{video.image}});">
-						<div id="duration">{{video.duration}}</div>
-					</div>
-					<h2><strong>{{video.title}}</strong></h2>
-					<h3>{{video.channelTitle}} - {{video.viewCount}} views</h3>
-					<br>
-					<h3>Created on {{video.createdDate}}</h3>
-				</section>
-			</div>
-		</div>
+		<ng-view></ng-view>
 	</div>
 </body>
 </html>

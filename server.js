@@ -32,23 +32,9 @@ app.get('/youtube/index', function (request, response, next) {
 			response.json(500, {"error":'Need to re-authenticate to Google, popup in '});
 			return;
 		}
-		var videos = [];
-		for(var videoCounter in activityData.items) {
-			var createdDate = new Date(activityData.items[videoCounter].snippet.publishedAt);
-			var dateString = createDateString(createdDate);
-			var videoObj = {
-				"title": activityData.items[videoCounter].snippet.title,
-				"synopsis": activityData.items[videoCounter].snippet.description,
-				"image": activityData.items[videoCounter].snippet.thumbnails.high.url,
-				"channelTitle": activityData.items[videoCounter].snippet.channelTitle,
-				"videoID": activityData.items[videoCounter].id,
-				"viewCount": activityData.items[videoCounter].statistics.viewCount,
-				"duration": getDuration(activityData.items[videoCounter].contentDetails.duration),
-				"createdDate": dateString
-			};
-			videos.push(videoObj);
-		}
-		response.json({"videos": videos});
+		parseVideoData(activityData, function (videos) {
+			response.json({"videos": videos});
+		});
 	});
 });
 app.post('/youtube/updateToken', function (request, response, next) {
@@ -58,13 +44,22 @@ app.post('/youtube/updateToken', function (request, response, next) {
 	});
 });
 app.post('/youtube/searchYoutube', function (request, response, next) {
-	searchYoutube(request, function (error, data) {
+	searchYoutube(request, function (error, searchResults) {
 		if(error) {
 			response.json({message: error}, 500);
 		}
-		response.json(data);
+		parseVideoData(searchResults, function (videos) {
+			response.json({"videos": videos});
+		});
 	});
 });
+app.get('/getKey', function (request, response, next) {
+	if(config.oauthKey) {
+		response.json({key: config.oauthKey});
+	} else {
+		response.json(500, {error: 'Oauth key missing in config file, please update!'});
+	}
+})
 app.listen(serverPort, ipAddr, function () {
 	console.log("Server has started on ip " + ipAddr + " on port " + serverPort);
 });
@@ -91,7 +86,7 @@ function searchYoutube(request, callback) {
 			videoArray.push(videoId);
 		}
 		Youtube.videos.list({part: 'snippet,statistics,contentDetails', id: videoArray.join(',')}, function (error, result) {
-			return callback(null, result.items);
+			return callback(null, result);
 		});
 	});
 }
@@ -109,4 +104,24 @@ function createDateString(createdDate) {
 function getDuration(iso8601Duration) {
 	var durationInSeconds = iso8601.parseToTotalSeconds(iso8601Duration);
 	return Math.floor(durationInSeconds/60) + ':' + ('0' + durationInSeconds%60).slice(-2);
+}
+
+function parseVideoData(data, callback) {
+	var videos = [];
+	for(var videoCounter in data.items) {
+		var createdDate = new Date(data.items[videoCounter].snippet.publishedAt);
+		var dateString = createDateString(createdDate);
+		var videoObj = {
+			"title": data.items[videoCounter].snippet.title,
+			"synopsis": data.items[videoCounter].snippet.description,
+			"image": data.items[videoCounter].snippet.thumbnails.high.url,
+			"channelTitle": data.items[videoCounter].snippet.channelTitle,
+			"videoID": data.items[videoCounter].id,
+			"viewCount": data.items[videoCounter].statistics.viewCount,
+			"duration": getDuration(data.items[videoCounter].contentDetails.duration),
+			"createdDate": dateString
+		};
+		videos.push(videoObj);
+	}
+	return callback(videos);
 }

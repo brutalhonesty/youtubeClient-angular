@@ -1,4 +1,4 @@
-youtubeApp.directive('search', ['SearchYoutube', function (SearchYoutube) {
+youtubeApp.directive('search', ['SearchYoutube', '$location', function (SearchYoutube, $location) {
 	return {
 		restrict: 'A',
 		link: function($scope, element) {
@@ -16,8 +16,9 @@ youtubeApp.directive('search', ['SearchYoutube', function (SearchYoutube) {
 		    			}, 1000);
 		    		});
 		    		SearchYoutube.search(element.val()).success(function (data) {
+		    			$location.path('/search/' + element.val());
 		    			// Use search results to repopulate the cards
-	    				$scope.videos = data;
+	    				$scope.videos = data.videos;
 	    				//$scope.youtube.searchResults = data;
 		    			element.siblings('label').fadeOut('fast');
 		    		}).error(function (error) {
@@ -36,22 +37,16 @@ youtubeApp.directive('videos', function () {
 				if(videoData) {
 					element.parent().children('.card:nth-child(even)').addClass('animated rotateInUpLeft');
 					element.parent().children('.card:nth-child(odd)').addClass('animated rotateInUpRight');
-					/* TODO: Fix this!
-					element.parent().children('.card:nth-child(even)').removeClass('animated rotateInUpLeft');
-					element.parent().children('.card:nth-child(odd)').removeClass('animated rotateInUpRight');
-					element.parent().children('.card:nth-child(odd)').addClass('animated rotateOutUpLeft');
-					element.parent().children('.card:nth-child(even)').addClass('animated rotateOutUpRight');
-					 */
 				}
 			});
 		}
 	}
 });
-youtubeApp.directive('error', ['UpdateToken', function (UpdateToken) {
+youtubeApp.directive('tokenerror', ['UpdateToken', function (UpdateToken) {
 	return {
 		restrict: 'A',
 		link: function($scope, element) {
-			$scope.$watch('error', function () {
+			$scope.$watch('tokenerror', function () {
 				var countdown = 3;
 				var interval = setInterval(function () {
 					if(countdown === 0) {
@@ -69,7 +64,7 @@ youtubeApp.directive('error', ['UpdateToken', function (UpdateToken) {
 										location.reload();
 									},2000);
 								}).error(function (error) {
-									console.log(error);
+									$scope.error = error;
 								});
 							}
 						});
@@ -80,3 +75,17 @@ youtubeApp.directive('error', ['UpdateToken', function (UpdateToken) {
 		}
 	}
 }]);
+youtubeApp.directive('videoAngular', function () {
+	var myPlayer;
+	return {
+		restrict: 'E',
+		templateUrl: 'views/video.html',
+		link: function($scope, element) {
+			// This causes the stack to exceed its limit
+			/*if(myPlayer) {
+				myPlayer.dispose();
+			}*/
+			myPlayer = videojs('currentVideo', { "techOrder": ["youtube"], "src": "http://www.youtube.com/watch?v="+$scope.videoID });
+		}
+	}
+})

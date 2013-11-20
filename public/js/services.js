@@ -15,3 +15,10 @@ youtubeApp.service('UpdateToken', ['$http', function ($http) {
 youtubeApp.service('Index', ['$http', function ($http) {
 	return $http.get('/youtube/index');
 }]);
+youtubeApp.service('OauthAng', ['$http', function ($http) {
+	return {
+		getKey: function() {
+			return $http.get('/getKey');
+		}
+	}
+}]);

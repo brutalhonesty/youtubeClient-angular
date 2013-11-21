@@ -22,3 +22,10 @@ youtubeApp.service('OauthAng', ['$http', function ($http) {
 		}
 	}
 }]);
+youtubeApp.service('Videos', ['$http', function ($http) {
+	return {
+		getVideo: function(query) {
+			return $http.get('/youtube/getVideo', {params: {id: query}});
+		}
+	}
+}]);

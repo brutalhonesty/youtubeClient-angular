@@ -40,17 +40,29 @@ app.get('/youtube/index', function (request, response, next) {
 app.post('/youtube/updateToken', function (request, response, next) {
 	config.oauth = request.body.oauth;
 	configuration_handler.saveSettings(config, function () {
-		response.json({message: "Success"});
+		response.json({message: 'Success'});
 	});
 });
 app.post('/youtube/searchYoutube', function (request, response, next) {
 	searchYoutube(request, function (error, searchResults) {
 		if(error) {
 			response.json({message: error}, 500);
+		} else {
+			parseVideoData(searchResults, function (videos) {
+				response.json({'videos': videos});
+			});
 		}
-		parseVideoData(searchResults, function (videos) {
-			response.json({"videos": videos});
-		});
+	});
+});
+app.get('/youtube/getVideo', function (request, response, next) {
+	getVideo(request, function (error, videoResult) {
+		if(error) {
+			response.json({message: error}, 500);
+		} else {
+			parseVideoData(videoResult, function (video) {
+				response.json({'videos': video});
+			});
+		}
 	});
 });
 app.get('/getKey', function (request, response, next) {
@@ -88,6 +100,19 @@ function searchYoutube(request, callback) {
 		Youtube.videos.list({part: 'snippet,statistics,contentDetails', id: videoArray.join(',')}, function (error, result) {
 			return callback(null, result);
 		});
+	});
+}
+
+function getVideo(request, callback) {
+	if(!request.query.id) {
+		return callback('Missing ID');
+	}
+	Youtube.authenticate({
+		type: "oauth",
+		token: config.oauth
+	});
+	Youtube.videos.list({part: 'snippet,statistics,contentDetails', id: request.query.id}, function (error, result) {
+		return callback(null, result);
 	});
 }
 

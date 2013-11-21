@@ -58,7 +58,7 @@ youtubeApp.directive('tokenerror', ['UpdateToken', function (UpdateToken) {
 							} else {
 								localStorage.setItem('oauth_token', oauthData.access_token);
 								UpdateToken.update(oauthData.access_token).success(function (data) {
-									console.log(data);	
+									delete $scope.tokenerror;
 									$scope.error = 'Refreshing...';
 									setTimeout(function () {
 										location.reload();
@@ -81,11 +81,15 @@ youtubeApp.directive('videoAngular', function () {
 		restrict: 'E',
 		templateUrl: 'views/video.html',
 		link: function($scope, element) {
-			// This causes the stack to exceed its limit
-			/*if(myPlayer) {
+			// TODO Need to fix as this causes the stack to exceed its limit
+			if(myPlayer) {
 				myPlayer.dispose();
-			}*/
-			myPlayer = videojs('currentVideo', { "techOrder": ["youtube"], "src": "http://www.youtube.com/watch?v="+$scope.videoID });
+			}
+			$scope.width = element.parent().parent().parent().width();
+			$scope.height = element.parent().parent().parent().height();
+			setTimeout(function () {
+				myPlayer = videojs('currentVideo', { "techOrder": ["youtube"], "src": "http://www.youtube.com/watch?v="+$scope.video.videoID });
+			}, 500);
 		}
 	}
 })

@@ -13,7 +13,8 @@
 	</h1>
 </div>
 <div id="videoContainer" ng-if="!error && !tokenerror">
-	<h1>What to Watch</h1>
+	<h2 ng-if="video.title">{{video.title}}</h2>
+	<h1 ng-if="!video.title">What to Watch</h1>
 	<label for="search"></label>
 	<input type="text" id="search" placeholder="Search.." autocomplete="off" autofocus search>
 	<video-angular></video-angular>
